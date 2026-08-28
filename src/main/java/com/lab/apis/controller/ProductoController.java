@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 import com.lab.apis.model.Producto;
@@ -50,6 +52,31 @@ public class ProductoController {
         return null;
     }
 
+    // aqui
+    @PatchMapping("/api/productos/{id}")
+    public Producto actualizarParcialmente(@PathVariable Long id, @RequestBody Producto cambios) {
+        for (Producto producto : productos) {
+            if (producto.getId().equals(id)) {
+
+                if (cambios.getNombre() != null) {
+                    producto.setNombre(cambios.getNombre());
+                }
+
+                if (cambios.getPrecio() != null) {
+                    producto.setPrecio(cambios.getPrecio());
+                }
+
+                if (cambios.getCategoria() != null) {
+                    producto.setCategoria(cambios.getCategoria());
+                }
+
+                return producto;
+            }
+        }
+
+        return null;
+    }
+
     @DeleteMapping("/api/productos/{id}")
     public String eliminarProducto(@PathVariable Long id) {
         boolean eliminado = productos.removeIf(producto -> producto.getId().equals(id));
@@ -59,6 +86,16 @@ public class ProductoController {
         }
 
         return "Producto no encontrado";
+    }
+
+    @GetMapping("/api/productos/{id}")
+    public Producto obtenerProductoPorId(@PathVariable Long id) {
+        for (Producto producto : productos) {
+            if (producto.getId().equals(id)) {
+                return producto;
+            }
+        }
+        return null;
     }
 
 }
